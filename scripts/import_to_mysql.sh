@@ -17,20 +17,20 @@ create_database() {
 optimize_mysql() {
     echo "Optimizing MySQL settings for bulk import..."
     mysql --defaults-file="$MYSQL_DEFAULTS_FILE" -h "$MYSQL_HOST" "$MYSQL_DATABASE" <<EOF
-    SET SESSION unique_checks = 0;
-    SET SESSION foreign_key_checks = 0;
-    SET SESSION sql_log_bin = 0;
-    SET SESSION autocommit = 0;
+    SET GLOBAL unique_checks = 0;
+    SET GLOBAL foreign_key_checks = 0;
+    SET GLOBAL sql_log_bin = 0;
+    SET GLOBAL autocommit = 0;
 EOF
 }
 
 restore_mysql_settings() {
     echo "Restoring MySQL settings..."
     mysql --defaults-file="$MYSQL_DEFAULTS_FILE" -h "$MYSQL_HOST" "$MYSQL_DATABASE" <<EOF
-    SET SESSION unique_checks = 1;
-    SET SESSION foreign_key_checks = 1;
-    SET SESSION sql_log_bin = 1;
-    SET SESSION autocommit = 1;
+    SET GLOBAL unique_checks = 1;
+    SET GLOBAL foreign_key_checks = 1;
+    SET GLOBAL sql_log_bin = 1;
+    SET GLOBAL autocommit = 1;
 EOF
 }
 
