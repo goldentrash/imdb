@@ -5,7 +5,7 @@
 create_database() {
     echo "Creating and initializing database..."
     mysql --defaults-file="$MYSQL_DEFAULTS_FILE" -h "$MYSQL_HOST" \
-        -e "CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};"
+        -e "DROP DATABASE IF EXISTS ${MYSQL_DATABASE}; CREATE DATABASE ${MYSQL_DATABASE};"
     
     if ! mysql --defaults-file="$MYSQL_DEFAULTS_FILE" -h "$MYSQL_HOST" \
         "$MYSQL_DATABASE" < "$IMDB_SQL_DIR/scheme.sql"; then
