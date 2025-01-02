@@ -44,7 +44,6 @@ copy_to_secure_location() {
         return 1
     }
     
-    echo "Copying ${file_name}.tsv to secure location..."
     if ! cp "$source_file" "$target_file"; then
         echo "Error: Failed to copy file to secure location"
         return 1
