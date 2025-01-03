@@ -1,3 +1,10 @@
+/**
+ * When reading data with LOAD DATA, empty or missing columns are updated with ''. 
+ * To load a NULL value into a column, use \N in the data file. 
+ * The literal word NULL may also be used under some circumstances. 
+ * See Section 15.2.9, https://dev.mysql.com/doc/refman/8.4/en/load-data.html.
+ */
+
 -- name.basics.tsv.gz - Contains the following information for names:
 CREATE TABLE IF NOT EXISTS name_basics (
    nconst VARCHAR(10) PRIMARY KEY,     -- alphanumeric unique identifier of the name/person
