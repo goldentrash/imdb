@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS title_basics (
 CREATE TABLE IF NOT EXISTS title_akas (
    titleId VARCHAR(10),                -- a tconst, an alphanumeric unique identifier of the title
    ordering INT,                       -- a number to uniquely identify rows for a given titleId
-   title VARCHAR(500),                 -- the localized title
+   title VARCHAR(800),                 -- the localized title
    region VARCHAR(4),                  -- the region for this version of the title
    language VARCHAR(4),                -- the language of the title
    types VARCHAR(100),                 -- Enumerated set of attributes for this alternative title
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS title_episode (
    tconst VARCHAR(10),                 -- alphanumeric identifier of episode
    parentTconst VARCHAR(10),           -- alphanumeric identifier of the parent TV Series
    seasonNumber VARCHAR(4),            -- season number the episode belongs to
-   episodeNumber VARCHAR(4),           -- episode number of the tconst in the TV series
+   episodeNumber VARCHAR(8),           -- episode number of the tconst in the TV series
    PRIMARY KEY (tconst),
    FOREIGN KEY (tconst) REFERENCES title_basics(tconst),
    FOREIGN KEY (parentTconst) REFERENCES title_basics(tconst)
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS title_principals (
    ordering TINYINT UNSIGNED,          -- a number to uniquely identify rows for a given titleId
    nconst VARCHAR(10),                 -- alphanumeric unique identifier of the name/person
    category VARCHAR(50),               -- the category of job that person was in
-   job VARCHAR(255),                   -- the specific job title if applicable, else '\N'
+   job VARCHAR(400),                   -- the specific job title if applicable, else '\N'
    characters TEXT,                    -- the name of the character played if applicable, else '\N'
    PRIMARY KEY (tconst, ordering),
    FOREIGN KEY (tconst) REFERENCES title_basics(tconst),
