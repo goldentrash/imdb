@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS title_basics (
 CREATE TABLE IF NOT EXISTS title_akas (
    titleId VARCHAR(10),                -- a tconst, an alphanumeric unique identifier of the title
    ordering INT,                       -- a number to uniquely identify rows for a given titleId
-   title VARCHAR(800),                 -- the localized title
+   title VARCHAR(1000),                -- the localized title
    region VARCHAR(4),                  -- the region for this version of the title
    language VARCHAR(4),                -- the language of the title
    types VARCHAR(100),                 -- Enumerated set of attributes for this alternative title
