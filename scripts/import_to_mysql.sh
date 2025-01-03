@@ -6,32 +6,12 @@ create_database() {
     echo "Creating and initializing database..."
     mysql --defaults-file="$MYSQL_DEFAULTS_FILE" -h "$MYSQL_HOST" \
         -e "DROP DATABASE IF EXISTS ${MYSQL_DATABASE}; CREATE DATABASE ${MYSQL_DATABASE};"
-    
+   
     if ! mysql --defaults-file="$MYSQL_DEFAULTS_FILE" -h "$MYSQL_HOST" \
         "$MYSQL_DATABASE" < "$IMDB_SQL_DIR/scheme.sql"; then
         echo "Error: Failed to initialize database schema"
         return 1
     fi
-}
-
-optimize_mysql() {
-    echo "Optimizing MySQL settings for bulk import..."
-    mysql --defaults-file="$MYSQL_DEFAULTS_FILE" -h "$MYSQL_HOST" "$MYSQL_DATABASE" <<EOF
-    SET GLOBAL unique_checks = 0;
-    SET GLOBAL foreign_key_checks = 0;
-    SET GLOBAL sql_log_bin = 0;
-    SET GLOBAL autocommit = 0;
-EOF
-}
-
-restore_mysql_settings() {
-    echo "Restoring MySQL settings..."
-    mysql --defaults-file="$MYSQL_DEFAULTS_FILE" -h "$MYSQL_HOST" "$MYSQL_DATABASE" <<EOF
-    SET GLOBAL unique_checks = 1;
-    SET GLOBAL foreign_key_checks = 1;
-    SET GLOBAL sql_log_bin = 1;
-    SET GLOBAL autocommit = 1;
-EOF
 }
 
 copy_to_secure_location() {
@@ -81,19 +61,8 @@ import_data() {
     while [ $retry_count -lt $MAX_RETRY_COUNT ] && [ "$success" = false ]; do
         echo "Attempt $((retry_count + 1))/${MAX_RETRY_COUNT}"
         
-        mysql --defaults-file="$MYSQL_DEFAULTS_FILE" -h "$MYSQL_HOST" "$MYSQL_DATABASE" \
-            -e "TRUNCATE TABLE ${table_name};"
-        
-        if mysql --defaults-file="$MYSQL_DEFAULTS_FILE" -h "$MYSQL_HOST" "$MYSQL_DATABASE" <<EOF
-        LOAD DATA INFILE '${secure_file}'
-        INTO TABLE ${table_name}
-        FIELDS TERMINATED BY '\t'
-        ESCAPED BY ''
-        LINES TERMINATED BY '\n'
-        IGNORE 1 ROWS;
-        FIELDS NULL AS '\N';
-        COMMIT;
-EOF
+        if sed -e "s/__TABLE_NAME__/${table_name}/g" -e "s|__FILE_PATH__|${secure_file}|g" "${IMDB_SQL_DIR}/import.sql" | \
+            mysql --defaults-file="$MYSQL_DEFAULTS_FILE" -h "$MYSQL_HOST" "$MYSQL_DATABASE"
         then
             success=true
             echo "Successfully imported ${file_name}"
@@ -134,9 +103,6 @@ main() {
         echo "Error: Database creation failed"
         exit 1
     fi
-
-    optimize_mysql
-    trap restore_mysql_settings EXIT
 
     local overall_success=true
     for table in "${IMDB_DATASETS[@]}"; do
