@@ -6,10 +6,13 @@ Command-line utilities for downloading and importing IMDb's non-commercial datas
 
 Edit `setup.sh` to configure:
 
-- MySQL connection details
 - Directory paths
 - Retry settings
 - Dataset list
+
+Edit `mysql.cnf` to configure:
+
+- MySQL connection details
 
 ## Notes
 
