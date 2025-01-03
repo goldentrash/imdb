@@ -76,11 +76,11 @@ main() {
         exit 1
     fi
 
-    # echo "Starting IMDb dataset fetch..."
-    # if ! source "$FETCH_SCRIPT"; then
-    #     echo "Error: Fetch process failed"
-    #     exit 1
-    # fi
+    echo "Starting IMDb dataset fetch..."
+    if ! source "$FETCH_SCRIPT"; then
+        echo "Error: Fetch process failed"
+        exit 1
+    fi
 
     echo "Starting IMDb dataset import..."
     if ! source "$IMPORT_SCRIPT"; then
